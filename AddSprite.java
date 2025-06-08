@@ -48,6 +48,29 @@ public class AddSprite {
         timer.start();
     }
 
+    public void addGif(JPanel panel, String path, int x, int y, int width, int height) {
+        ImageIcon icon = new ImageIcon(path);
+
+        JLabel label = new JLabel(icon) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                g.drawImage(icon.getImage(), 0, 0, width, height, this);
+            }
+
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(width, height);
+            }
+        };
+
+        label.setBounds(x, y, width, height);
+        panel.add(label);
+        panel.setComponentZOrder(label, 0);
+        panel.repaint();
+
+    }
+
+
     
     public void addImageButton(JPanel panel, String imagePath, int x, int y, int width, int height, Runnable onClick) {
         ImageIcon originalIcon = new ImageIcon(imagePath);

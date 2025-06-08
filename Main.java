@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class Main {
     public static void main(String[] args) {
@@ -29,7 +31,7 @@ class PhoneLikeWindow extends JFrame {
 
     public PhoneLikeWindow() {
         setTitle("Tamagotchi");
-        setSize(540, 960);
+        setSize(450, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -48,7 +50,7 @@ class PhoneLikeWindow extends JFrame {
 
     private void showIntroScreen() {
 
-        spriteAdder.addTemporaryGif(panel, "assets/app/introanimated.gif", 80, 320, 380, 260, 6000, () -> {
+        spriteAdder.addTemporaryGif(panel, "assets/app/introanimated.gif", 70, 260, 310, 210, 6000, () -> {
           screenManager.loadScreen(this::showMainMenu);
           //System.out.println("a");
         });
@@ -56,7 +58,10 @@ class PhoneLikeWindow extends JFrame {
     }
 
     private void showMainMenu() {
-        spriteAdder.addClickableSprite(panel, "assets/app/continue.png", 120, 600, 300, 100, () -> {
+
+        spriteAdder.addGif(panel, "assets/app/MainDraw.gif", 20, 80, 410, 250);
+
+        spriteAdder.addClickableSprite(panel, "assets/app/continue.png", 105, 500, 250, 85, () -> {
             System.out.println("continue");
             if (true){
               SoundPlayer musicPlayer = new SoundPlayer();
@@ -64,11 +69,14 @@ class PhoneLikeWindow extends JFrame {
             }
         });
 
-        spriteAdder.addClickableSprite(panel, "assets/app/newgame.png", 120, 720, 300, 100, () -> {
+        spriteAdder.addClickableSprite(panel, "assets/app/newgame.png", 105, 600, 250, 85, () -> {
             System.out.println("newgame");
-            screenManager.loadScreen(() -> game.selectPet(panel, listPets, musicPlayer));  // también puedes pasar screenManager
+            screenManager.loadScreen(() -> game.selectPet(panel, listPets, musicPlayer));
             SoundPlayer musicPlayer = new SoundPlayer();
             musicPlayer.playEffectSound("assets/app/audio/effects/valid.wav");
         });
     }
+
+
+    private void showLogGame(){ /* TODO */ }
 }
