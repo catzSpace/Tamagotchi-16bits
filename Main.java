@@ -50,7 +50,7 @@ class PhoneLikeWindow extends JFrame {
 
     private void showIntroScreen() {
 
-        spriteAdder.addTemporaryGif(panel, "assets/app/introanimated.gif", 70, 260, 310, 210, 6000, () -> {
+        spriteAdder.addTemporaryGif(panel, "assets/app/introanimated.gif", 60, 260, 330, 230, 6000, () -> {
           screenManager.loadScreen(this::showMainMenu);
           //System.out.println("a");
         });
@@ -71,7 +71,7 @@ class PhoneLikeWindow extends JFrame {
 
         spriteAdder.addClickableSprite(panel, "assets/app/newgame.png", 105, 600, 250, 85, () -> {
             System.out.println("newgame");
-            screenManager.loadScreen(() -> game.selectPet(panel, listPets, musicPlayer));
+            screenManager.loadScreen(() -> game.selectPet(panel, listPets, musicPlayer, screenManager));
             SoundPlayer musicPlayer = new SoundPlayer();
             musicPlayer.playEffectSound("assets/app/audio/effects/valid.wav");
         });

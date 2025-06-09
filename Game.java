@@ -10,9 +10,10 @@ public class Game{
   private ScreenManager screenManager;
 
 
-  public void selectPet(JPanel panel, String[] pets, SoundPlayer mainMusic){
+  public void selectPet(JPanel panel, String[] pets, SoundPlayer mainMusic, ScreenManager _screenManager){
 
     spriteAdder.addSprite(panel, "assets/app/selecttitle.png", 10, 50, 440, 110);
+    screenManager = _screenManager;
 
     int col1X = 85;     // X para columna 1
     int col2X = 200;    // X para columna 2
@@ -33,7 +34,7 @@ public class Game{
           System.out.println("Mascota seleccionada: " + currentPet);
           musicPlayer.playEffectSound("assets/app/audio/effects/newGame.wav");
           mainMusic.stop();
-          //screenManager.loadScreen(this::newGame(panel, currentPet));
+          screenManager.loadScreen(() -> newGame(panel, currentPet));
       });
     }
   }
@@ -41,9 +42,26 @@ public class Game{
   public static void saved(){}
 
   // int
-  private static void newGame(JPanel panel, String petName){
-    //String path = "assets/pets/animations/" + petName + "_intro.gif";
-    //spriteAdder.addTemporaryGif(panel, path);
-    //musicPlayer.playLoop("assets/app/audio/Game.wav");
+  private void newGame(JPanel panel, String petName){
+    String introAnimPath = "assets/pets/animations/born-scene.gif";
+
+    spriteAdder.addTemporaryGif(panel, introAnimPath, 100, 300, 300, 300, 5800, ()-> {
+        screenManager.clearScreen();
+        spriteAdder.addTemporaryGif(panel, "assets/app/transition.gif", 0, 0, 450, 800, 3800, () ->{
+          screenManager.clearScreen();
+          screenManager.loadScreen(() -> startGame(panel, petName));
+        });
+    });
   }
+
+  private void startGame(JPanel panel, String petName) {
+    String petIntro = "assets/pets/animations/" + petName + "_intro.gif";
+    String petMainAnimation = "assets/pets/animations/" + petName + ".gif";
+    spriteAdder.addTemporaryGif(panel, petIntro, 125, 300, 200, 200, 3000, () -> {
+      screenManager.clearScreen();
+      spriteAdder.addGif(panel, petMainAnimation, 125, 300, 200, 200);
+      musicPlayer.playLoop("assets/app/audio/Game.wav");
+    });
+  }
+
 }

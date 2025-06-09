@@ -15,6 +15,12 @@ public class ScreenManager {
         screenBuilder.run();
     }
 
+    public void clearScreen(){
+        panel.removeAll();
+        panel.revalidate();
+        panel.repaint();
+    }
+
     public JPanel getPanel() {
         return panel;
     }
