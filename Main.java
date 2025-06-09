@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -52,7 +53,6 @@ class PhoneLikeWindow extends JFrame {
 
         spriteAdder.addTemporaryGif(panel, "assets/app/introanimated.gif", 60, 260, 330, 230, 6000, () -> {
           screenManager.loadScreen(this::showMainMenu);
-          //System.out.println("a");
         });
 
     }
@@ -63,9 +63,22 @@ class PhoneLikeWindow extends JFrame {
 
         spriteAdder.addClickableSprite(panel, "assets/app/continue.png", 105, 500, 250, 85, () -> {
             System.out.println("continue");
-            if (true){
-              SoundPlayer musicPlayer = new SoundPlayer();
-              musicPlayer.playEffectSound("assets/app/audio/effects/invalid.wav");
+
+            File directory = new File("data");
+
+            if (directory.exists() && directory.isDirectory()) {
+                File[] files = directory.listFiles();
+                
+                if (files != null && files.length > 0) {
+                    musicPlayer.playEffectSound("assets/app/audio/effects/valid.wav");
+                    //screenManager.loadScreen(() -> game.loadtPet(panel, files, musicPlayer, screenManager));
+
+                    // for (File file : files) {
+                    //     System.out.println(file.getName());
+                    // }
+                } else {
+                    musicPlayer.playEffectSound("assets/app/audio/effects/invalid.wav");
+                }
             }
         });
 
@@ -76,7 +89,4 @@ class PhoneLikeWindow extends JFrame {
             musicPlayer.playEffectSound("assets/app/audio/effects/valid.wav");
         });
     }
-
-
-    private void showLogGame(){ /* TODO */ }
 }

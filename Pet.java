@@ -3,43 +3,79 @@ import java.io.Serializable;
 public class Pet implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private int vida;
-    private int hambre;
-    private int sueño;
-    private int diversion;
-    private int limpieza;
+    private final String name;
 
-    public Pet(int vida, int hambre, int sueño, int diversion, int limpieza) {
-        this.vida = vida;
-        this.hambre = hambre;
-        this.sueño = sueño;
-        this.diversion = diversion;
-        this.limpieza = limpieza;
+    private double health = 10;
+    private double hunger = 10;
+    private double sleep = 10;
+    private double fun = 10;
+    private double cleanliness = 10;
+
+    public Pet(String name) {
+        this.name = name;
     }
 
-    public int getVida() { return vida; }
-    public void setVida(int vida) { this.vida = vida; }
+    // Getters
+    public String getName() { return name; }
 
-    public int getHambre() { return hambre; }
-    public void setHambre(int hambre) { this.hambre = hambre; }
+    public double getHealth() { return health; }
+    public double getHunger() { return hunger; }
+    public double getSleep() { return sleep; }
+    public double getFun() { return fun; }
+    public double getCleanliness() { return cleanliness; }
 
-    public int getSueño() { return sueño; }
-    public void setSueño(int sueño) { this.sueño = sueño; }
 
-    public int getDiversion() { return diversion; }
-    public void setDiversion(int diversion) { this.diversion = diversion; }
+    private double round1Decimal(double value) {
+      return Math.round(value * 10.0) / 10.0;
+    }
 
-    public int getLimpieza() { return limpieza; }
-    public void setLimpieza(int limpieza) { this.limpieza = limpieza; }
+    public void degradeStats() {
+      health = Math.max(0, round1Decimal(health - 0.2));
+      hunger = Math.max(0, round1Decimal(hunger - 0.2));
+      sleep = Math.max(0, round1Decimal(sleep - 0.2));
+      fun = Math.max(0, round1Decimal(fun - 0.2));
+      cleanliness = Math.max(0, round1Decimal(cleanliness - 0.2));
+    }
+
+    // Actions
+    public void eat() {
+        hunger = Math.min(10, hunger + 0.5);
+        cleanliness = Math.max(0, cleanliness - 0.2);
+    }
+
+    public void sleep() {
+        this.sleep = Math.min(10, this.sleep + 0.5);
+        fun = Math.max(0, fun - 0.2);
+        hunger = Math.max(0, hunger - 0.2);
+    }
+
+    public void play() {
+        fun = Math.min(10, fun + 0.5);
+        sleep = Math.max(0, sleep - 0.2);
+        hunger = Math.max(0, hunger - 0.2);
+    }
+
+    public void bathe() {
+        cleanliness = Math.min(10, cleanliness + 0.5);
+        fun = Math.max(0, fun - 0.2);
+    }
+
+    public void heal() {
+        health = Math.min(10, health + 0.5);
+        sleep = Math.max(0, sleep - 0.2);
+        fun = Math.max(0, fun - 0.2);
+    }
 
     @Override
     public String toString() {
-        return "Mascota{" +
-                "vida=" + vida +
-                ", hambre=" + hambre +
-                ", sueño=" + sueño +
-                ", diversion=" + diversion +
-                ", limpieza=" + limpieza +
+        return "Pet{" +
+                "name='" + name + '\'' +
+                ", health=" + health +
+                ", hunger=" + hunger +
+                ", sleep=" + sleep +
+                ", fun=" + fun +
+                ", cleanliness=" + cleanliness +
                 '}';
     }
 }
+
