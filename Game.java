@@ -12,7 +12,7 @@ public class Game{
   private final PetUtils petUtils = new PetUtils();
 
 
-  public void selectPet(JPanel panel, String[] pets, SoundPlayer mainMusic, ScreenManager _screenManager){
+  public void selectPetMenu(JPanel panel, String[] pets, SoundPlayer mainMusic, ScreenManager _screenManager){
 
     spriteAdder.addSprite(panel, "assets/app/selecttitle.png", 10, 50, 440, 110);
     screenManager = _screenManager;
@@ -41,14 +41,35 @@ public class Game{
     }
   }
 
+  public void loadPetMenu(JPanel panel, String[] pets, SoundPlayer mainMusic, ScreenManager _screenManager){
 
-  public void loadGame(JPanel panel, String petName){
-    screenManager.clearScreen();
-    screenManager.loadScreen(() -> startGame(panel, petName, "load"));
+    screenManager = _screenManager;
+
+    int x = 20;         // X fijo para todos (centrado)
+    int startY = 220;    // Y inicial
+    int spacingY = 180;  // Más espacio para que no se encimen
+
+    for (int i = 0; i < pets.length; i++) {
+        String pet = pets[i];
+        final String currentPet = pet.replace(".bin", "");
+
+        final String path = "assets/selectMenu/" + currentPet + ".gif";
+
+        int y = startY + i * spacingY;
+
+        spriteAdder.addClickableSpriteAnim(panel, path, x, y, 260, 160, () -> {
+            System.out.println("Mascota seleccionada: " + currentPet);
+            musicPlayer.playEffectSound("assets/app/audio/effects/newGame.wav");
+            mainMusic.stop();
+            screenManager.loadScreen(() -> startGame(panel, currentPet, "loaded"));
+        });
+    }
   }
 
 
   private void newGame(JPanel panel, String petName){
+    
+    // EGG OPEN ANIMATION
     String introAnimPath = "assets/pets/animations/born-scene.gif";
 
     spriteAdder.addTemporaryGif(panel, introAnimPath, 100, 300, 300, 300, 5800, ()-> {
@@ -61,9 +82,15 @@ public class Game{
   }
 
   private void startGame(JPanel panel, String petName, String status) {
+
+    // INTRO PET ANIMATION
     String petIntro = "assets/pets/animations/" + petName + "_intro.gif";
     String petMainAnimation = "assets/pets/animations/" + petName + ".gif";
+
+    // FILE NAME
     String FileToSave = "data/" + petName + ".bin";
+
+    // PET ANIMATION
     spriteAdder.addTemporaryGif(panel, petIntro, 125, 300, 200, 200, 3000, () -> {
 
       screenManager.clearScreen();
@@ -78,15 +105,13 @@ public class Game{
           pet.degradeStats();
           petUtils.savePetToFile(pet, FileToSave);
           System.out.println(pet);
-          if (pet.getFun() == 8.2){
-            System.out.println("xd");
-          }
         });
 
         autoSaveTimer.start();
 
       } else {
-        Pet pet = petUtils.loadPetFromFile("petdata.bin");
+
+        Pet pet = petUtils.loadPetFromFile(FileToSave);
         System.out.println(pet);
 
         Timer autoSaveTimer = new Timer(2000, e -> {

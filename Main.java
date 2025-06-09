@@ -70,12 +70,9 @@ class PhoneLikeWindow extends JFrame {
                 File[] files = directory.listFiles();
                 
                 if (files != null && files.length > 0) {
+                    String[] savedFileNames = directory.list();
                     musicPlayer.playEffectSound("assets/app/audio/effects/valid.wav");
-                    //screenManager.loadScreen(() -> game.loadtPet(panel, files, musicPlayer, screenManager));
-
-                    // for (File file : files) {
-                    //     System.out.println(file.getName());
-                    // }
+                    screenManager.loadScreen(() -> game.loadPetMenu(panel, savedFileNames, musicPlayer, screenManager));
                 } else {
                     musicPlayer.playEffectSound("assets/app/audio/effects/invalid.wav");
                 }
@@ -84,7 +81,7 @@ class PhoneLikeWindow extends JFrame {
 
         spriteAdder.addClickableSprite(panel, "assets/app/newgame.png", 105, 600, 250, 85, () -> {
             System.out.println("newgame");
-            screenManager.loadScreen(() -> game.selectPet(panel, listPets, musicPlayer, screenManager));
+            screenManager.loadScreen(() -> game.selectPetMenu(panel, listPets, musicPlayer, screenManager));
             SoundPlayer musicPlayer = new SoundPlayer();
             musicPlayer.playEffectSound("assets/app/audio/effects/valid.wav");
         });
