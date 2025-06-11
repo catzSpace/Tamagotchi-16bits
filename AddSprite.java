@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.Image;
 import java.awt.event.*;
 import java.awt.*;
+import javax.swing.Timer;
+import java.util.TimerTask;
 
 public class AddSprite {
     public void addSprite(JPanel panel, String id, String path, int x, int y, int width, int height){
@@ -31,6 +33,36 @@ public class AddSprite {
     }
 
 
+    public void addDescartableGif(JPanel panel, String id, String path, int x, int y, int width, int height, int time){
+        ImageIcon icon = new ImageIcon(path);
+
+        JLabel label = new JLabel(icon) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                g.drawImage(icon.getImage(), 0, 0, width, height, this);
+            }
+
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(width, height);
+            }
+        };
+
+        label.setBounds(x, y, width, height);
+        label.setName(id);
+        panel.add(label);
+        panel.setComponentZOrder(label, 0);
+        panel.repaint();
+
+        Timer timer = new Timer(time, e -> {
+          panel.remove(label);
+          panel.revalidate();
+          panel.repaint();
+        });
+        timer.setRepeats(false);
+        timer.start();
+    }
+
     public void addTemporaryGif(JPanel panel, String path, int x, int y, int width, int height, int time, Runnable onComplete) {
         ImageIcon icon = new ImageIcon(path);
 
@@ -51,14 +83,16 @@ public class AddSprite {
         panel.setComponentZOrder(label, 0);
         panel.repaint();
 
-        Timer timer = new Timer(time, null);
-        timer.setRepeats(false);
-        timer.addActionListener(e -> {
-            timer.stop();
-            if (onComplete != null) {
-                onComplete.run();
-            }
+        Timer timer = new Timer(time, e -> {
+          panel.remove(label);
+          panel.revalidate();
+          panel.repaint();
+
+          if (onComplete != null) {
+            onComplete.run();
+          }
         });
+        timer.setRepeats(false);
         timer.start();
     }
 
@@ -132,7 +166,8 @@ public class AddSprite {
                 label.setIcon(new ImageIcon(originalImage.getScaledInstance(width + hoverScale, height + hoverScale, Image.SCALE_SMOOTH)));
                 label.setBounds(x - hoverScale / 2, y - hoverScale / 2, width + hoverScale, height + hoverScale); // centrar
                 SoundPlayer musicPlayer = new SoundPlayer();
-                musicPlayer.playEffectSound("assets/app/audio/effects/hoverPet.wav");                                             
+                musicPlayer.playEffectSound("assets/app/audio/effects/hoverPet.wav");  
+                panel.setComponentZOrder(label, 0);
                 panel.repaint();
             }
 
@@ -141,12 +176,14 @@ public class AddSprite {
                 label.setCursor(Cursor.getDefaultCursor());
                 label.setIcon(new ImageIcon(originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH)));
                 label.setBounds(x, y, width, height);
+                panel.setComponentZOrder(label, 0);
                 panel.repaint();
             }
 
         });
 
         panel.add(label);
+        panel.setComponentZOrder(label, 0);
         panel.repaint();
     }
 

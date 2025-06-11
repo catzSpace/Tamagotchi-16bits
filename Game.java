@@ -82,6 +82,41 @@ public class Game{
     });
   }
 
+  private void statsButtonsOnScreen(JPanel panel, Pet pet){
+    spriteAdder.addClickableSprite(panel, "assets/pets/actions/eat.png", 30, 550, 96, 88, () -> {
+      pet.eat();
+    });
+
+    spriteAdder.addClickableSprite(panel, "assets/pets/actions/clean.png", 30, 650, 96, 88, () -> {
+      pet.bathe();
+    });
+
+    spriteAdder.addClickableSprite(panel, "assets/pets/actions/sleep.png", 140, 550, 96, 88, () -> {
+      pet.sleep();
+    });
+
+    spriteAdder.addClickableSprite(panel, "assets/pets/actions/play.png", 140, 650, 96, 88, () -> {
+      pet.play();
+    });
+  }
+
+  private void petStatsOnScreen(JPanel panel, Pet pet){
+    double hunger = pet.getHunger();
+    double sleep = pet.getSleep();
+    double fun = pet.getFun();
+    double cleanliness = pet.getCleanliness();
+
+    bar.renderBar(panel, "hunger", hunger, 30, 85);
+    bar.renderBar(panel, "sleep", sleep, 30, 115);
+    bar.renderBar(panel, "fun", fun, 30, 145);
+    bar.renderBar(panel, "cleanliness", cleanliness, 30, 175);
+
+    // ISSUES BANNERS
+    if (hunger <= 5){
+      spriteAdder.addDescartableGif(panel, "needfood", "assets/app/needfood.gif", 0, 250, 200, 64, 4000);
+    }
+  }
+
   private void startGame(JPanel panel, String petName, String status) {
 
     // INTRO PET ANIMATION
@@ -104,19 +139,13 @@ public class Game{
         Pet pet = new Pet(petName);
 
         Timer autoSaveTimer = new Timer(2000, e -> {
-          double hunger = pet.getHunger();
-          double sleep = pet.getSleep();
-          double fun = pet.getFun();
-          double cleanliness = pet.getCleanliness();
-
-          bar.renderBar(panel, "hunger", hunger, 30, 85);
-          bar.renderBar(panel, "sleep", sleep, 30, 115);
-          bar.renderBar(panel, "fun", fun, 30, 145);
-          bar.renderBar(panel, "cleanliness", cleanliness, 30, 175);
-
+          petStatsOnScreen(panel, pet);
           pet.degradeStats();
           petUtils.savePetToFile(pet, FileToSave);
         });
+
+        // ACTIONS BUTTONS
+        statsButtonsOnScreen(panel, pet);
 
         autoSaveTimer.start();
 
@@ -125,19 +154,14 @@ public class Game{
         Pet pet = petUtils.loadPetFromFile(FileToSave);
 
         Timer autoSaveTimer = new Timer(2000, e -> {
-          double hunger = pet.getHunger();
-          double sleep = pet.getSleep();
-          double fun = pet.getFun();
-          double cleanliness = pet.getCleanliness();
-
-          bar.renderBar(panel, "hunger", hunger, 30, 85);
-          bar.renderBar(panel, "sleep", sleep, 30, 115);
-          bar.renderBar(panel, "fun", fun, 30, 145);
-          bar.renderBar(panel, "cleanliness", cleanliness, 30, 175);
-
+          petStatsOnScreen(panel, pet);
           pet.degradeStats();
           petUtils.savePetToFile(pet, FileToSave);
         });
+
+        // ACTIONS BUTTONS
+        statsButtonsOnScreen(panel, pet);
+
 
         autoSaveTimer.start();
       }

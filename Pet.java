@@ -5,11 +5,12 @@ public class Pet implements Serializable {
 
     private final String name;
 
-    private double health = 10;
+    private double health = 8;
+
     private double hunger = 10;
     private double sleep = 10;
     private double fun = 10;
-    private double cleanliness = 10;
+    private double cleanliness = 12;
 
     public Pet(String name) {
         this.name = name;
@@ -31,7 +32,7 @@ public class Pet implements Serializable {
 
     public void degradeStats() {
       //health = Math.max(0, round1Decimal(health - 0.2));
-      hunger = Math.max(0, round1Decimal(hunger - 1));
+      hunger = Math.max(0, round1Decimal(hunger - 2));
       sleep = Math.max(0, round1Decimal(sleep - 1));
       fun = Math.max(0, round1Decimal(fun - 1));
       cleanliness = Math.max(0, round1Decimal(cleanliness - 1));
@@ -39,29 +40,29 @@ public class Pet implements Serializable {
 
     // Actions
     public void eat() {
-        hunger = Math.min(10, hunger + 0.5);
+        hunger = Math.min(10, hunger + 1);
         cleanliness = Math.max(0, cleanliness - 0.2);
     }
 
     public void sleep() {
-        this.sleep = Math.min(10, this.sleep + 0.5);
+        this.sleep = Math.min(10, this.sleep + 1);
         fun = Math.max(0, fun - 0.2);
         hunger = Math.max(0, hunger - 0.2);
     }
 
     public void play() {
-        fun = Math.min(10, fun + 0.5);
+        fun = Math.min(10, fun + 1);
         sleep = Math.max(0, sleep - 0.2);
         hunger = Math.max(0, hunger - 0.2);
     }
 
     public void bathe() {
-        cleanliness = Math.min(10, cleanliness + 0.5);
+        cleanliness = Math.min(10, cleanliness + 1);
         fun = Math.max(0, fun - 0.2);
     }
 
     public void heal() {
-        health = Math.min(10, health + 0.5);
+        health = Math.min(10, health + 1);
         sleep = Math.max(0, sleep - 0.2);
         fun = Math.max(0, fun - 0.2);
     }
@@ -78,4 +79,3 @@ public class Pet implements Serializable {
                 '}';
     }
 }
-
