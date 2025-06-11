@@ -4,8 +4,14 @@ import java.awt.event.*;
 import java.awt.*;
 
 public class AddSprite {
-    public void addSprite(JPanel panel, String path, int x, int y, int width, int height){
-        
+    public void addSprite(JPanel panel, String id, String path, int x, int y, int width, int height){
+        for (Component comp : panel.getComponents()) {
+          if (comp instanceof JLabel && id.equals(comp.getName())) {
+            panel.remove(comp);
+            break;
+          }
+        }
+
         ImageIcon originalIcon = new ImageIcon(path);
 
         Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
@@ -13,7 +19,15 @@ public class AddSprite {
 
         JLabel label = new JLabel(scaledIcon);
         label.setBounds(x, y, width, height);
+        label.setName(id);
+
         panel.add(label);
+        panel.setLayout(null);
+
+        panel.setComponentZOrder(label, 0);
+        panel.revalidate();
+
+        panel.repaint();
     }
 
 

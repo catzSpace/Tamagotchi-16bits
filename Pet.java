@@ -30,11 +30,11 @@ public class Pet implements Serializable {
     }
 
     public void degradeStats() {
-      health = Math.max(0, round1Decimal(health - 0.2));
-      hunger = Math.max(0, round1Decimal(hunger - 0.2));
-      sleep = Math.max(0, round1Decimal(sleep - 0.2));
-      fun = Math.max(0, round1Decimal(fun - 0.2));
-      cleanliness = Math.max(0, round1Decimal(cleanliness - 0.2));
+      //health = Math.max(0, round1Decimal(health - 0.2));
+      hunger = Math.max(0, round1Decimal(hunger - 1));
+      sleep = Math.max(0, round1Decimal(sleep - 1));
+      fun = Math.max(0, round1Decimal(fun - 1));
+      cleanliness = Math.max(0, round1Decimal(cleanliness - 1));
     }
 
     // Actions

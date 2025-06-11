@@ -10,11 +10,12 @@ public class Game{
   private final AddSprite spriteAdder = new AddSprite();
   private ScreenManager screenManager;
   private final PetUtils petUtils = new PetUtils();
+  private StatusBar bar = new StatusBar();
 
 
   public void selectPetMenu(JPanel panel, String[] pets, SoundPlayer mainMusic, ScreenManager _screenManager){
 
-    spriteAdder.addSprite(panel, "assets/app/selecttitle.png", 10, 50, 440, 110);
+    spriteAdder.addSprite(panel, "selectTitle", "assets/app/selecttitle.png", 10, 50, 440, 110);
     screenManager = _screenManager;
 
     int col1X = 85;     // X para columna 1
@@ -94,6 +95,7 @@ public class Game{
     spriteAdder.addTemporaryGif(panel, petIntro, 125, 300, 200, 200, 3000, () -> {
 
       screenManager.clearScreen();
+      spriteAdder.addGif(panel, "assets/app/bg.gif", -10, 60, 480, 660);
       spriteAdder.addGif(panel, petMainAnimation, 125, 300, 200, 200);
 
       musicPlayer.playLoop("assets/app/audio/Game.wav");
@@ -102,9 +104,18 @@ public class Game{
         Pet pet = new Pet(petName);
 
         Timer autoSaveTimer = new Timer(2000, e -> {
+          double hunger = pet.getHunger();
+          double sleep = pet.getSleep();
+          double fun = pet.getFun();
+          double cleanliness = pet.getCleanliness();
+
+          bar.renderBar(panel, "hunger", hunger, 30, 85);
+          bar.renderBar(panel, "sleep", sleep, 30, 115);
+          bar.renderBar(panel, "fun", fun, 30, 145);
+          bar.renderBar(panel, "cleanliness", cleanliness, 30, 175);
+
           pet.degradeStats();
           petUtils.savePetToFile(pet, FileToSave);
-          System.out.println(pet);
         });
 
         autoSaveTimer.start();
@@ -112,12 +123,20 @@ public class Game{
       } else {
 
         Pet pet = petUtils.loadPetFromFile(FileToSave);
-        System.out.println(pet);
 
         Timer autoSaveTimer = new Timer(2000, e -> {
+          double hunger = pet.getHunger();
+          double sleep = pet.getSleep();
+          double fun = pet.getFun();
+          double cleanliness = pet.getCleanliness();
+
+          bar.renderBar(panel, "hunger", hunger, 30, 85);
+          bar.renderBar(panel, "sleep", sleep, 30, 115);
+          bar.renderBar(panel, "fun", fun, 30, 145);
+          bar.renderBar(panel, "cleanliness", cleanliness, 30, 175);
+
           pet.degradeStats();
           petUtils.savePetToFile(pet, FileToSave);
-          System.out.println(pet);
         });
 
         autoSaveTimer.start();
