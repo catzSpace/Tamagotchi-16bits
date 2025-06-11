@@ -10,7 +10,7 @@ public class Pet implements Serializable {
     private double hunger = 10;
     private double sleep = 10;
     private double fun = 10;
-    private double cleanliness = 12;
+    private double cleanliness = 10;
 
     public Pet(String name) {
         this.name = name;
