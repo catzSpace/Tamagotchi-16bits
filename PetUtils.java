@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.io.File;
 
 public class PetUtils {
 
@@ -74,6 +75,8 @@ public class PetUtils {
                 if (pet.getHunger() < 2 || pet.getSleep() < 2 ||
                     pet.getFun() < 2 || pet.getCleanliness() < 2) {
                     System.out.println("☠️ Pet ha muerto");
+                    File partida = new File("data/" + pet.getName() + ".bin");
+                    partida.delete();
                     onDeath.run();
                 }
                 esperandoMuerte = false;

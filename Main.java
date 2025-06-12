@@ -51,7 +51,7 @@ class PhoneLikeWindow extends JFrame {
 
     private void showIntroScreen() {
 
-        spriteAdder.addTemporaryGif(panel, "assets/app/introanimated.gif", 60, 260, 330, 230, 1000, () -> {
+        spriteAdder.addTemporaryGif(panel, "assets/app/introanimated.gif", 60, 260, 330, 230, 6000, () -> {
           screenManager.loadScreen(this::showMainMenu);
         });
 

@@ -47,19 +47,19 @@ public class Game{
 
     screenManager = _screenManager;
 
-    int x = 20;         // X fijo para todos (centrado)
+    int x = 105;         // X fijo para todos (centrado)
     int startY = 80;    // Y inicial
-    int spacingY = 180;  // Más espacio para que no se encimen
+    int spacingY = 70;  // Más espacio para que no se encimen
 
     for (int i = 0; i < pets.length; i++) {
         String pet = pets[i];
         final String currentPet = pet.replace(".bin", "");
 
-        final String path = "assets/selectMenu/" + currentPet + ".gif";
+        final String path = "assets/loadMenu/" + currentPet + ".gif";
 
         int y = startY + i * spacingY;
 
-        spriteAdder.addClickableSpriteAnim(panel, path, x, y, 260, 160, () -> {
+        spriteAdder.addClickableSpriteAnim(panel, path, x, y, 240, 48, () -> {
             System.out.println("Mascota seleccionada: " + currentPet);
             musicPlayer.playEffectSound("assets/app/audio/effects/newGame.wav");
             mainMusic.stop();
@@ -108,9 +108,11 @@ public class Game{
   private void deadScene(JPanel panel, Pet pet, String petName){
     musicPlayer.stop();
     screenManager.clearScreen();
+    spriteAdder.addSprite(panel, "gameover" ,"assets/app/gameOver.png", 113, 270, 224, 224);
   }
 
   private void petStatsOnScreen(JPanel panel, Pet pet){
+
     double hunger = pet.getHunger();
     double sleep = pet.getSleep();
     double fun = pet.getFun();
@@ -121,8 +123,6 @@ public class Game{
     bar.renderBar(panel, "fun", fun, 30, 145);
     bar.renderBar(panel, "cleanliness", cleanliness, 30, 175);
 
-    // ISSUES BANNERS CONTAINER
-    // spriteAdder.addSprite(panel, );
 
     // ISSUES BANNERS
     if (hunger <= 3){
