@@ -11,6 +11,7 @@ public class Game{
   private ScreenManager screenManager;
   private final PetUtils petUtils = new PetUtils();
   private StatusBar bar = new StatusBar();
+  private Timer autoSaveTimer;
 
 
   public void selectPetMenu(JPanel panel, String[] pets, SoundPlayer mainMusic, ScreenManager _screenManager){
@@ -47,7 +48,7 @@ public class Game{
     screenManager = _screenManager;
 
     int x = 20;         // X fijo para todos (centrado)
-    int startY = 220;    // Y inicial
+    int startY = 80;    // Y inicial
     int spacingY = 180;  // Más espacio para que no se encimen
 
     for (int i = 0; i < pets.length; i++) {
@@ -85,19 +86,28 @@ public class Game{
   private void statsButtonsOnScreen(JPanel panel, Pet pet){
     spriteAdder.addClickableSprite(panel, "assets/pets/actions/eat.png", 30, 550, 96, 88, () -> {
       pet.eat();
+      musicPlayer.playEffectSound("assets/app/audio/effects/actionbtn.wav");
     });
 
     spriteAdder.addClickableSprite(panel, "assets/pets/actions/clean.png", 30, 650, 96, 88, () -> {
       pet.bathe();
+      musicPlayer.playEffectSound("assets/app/audio/effects/actionbtn.wav");
     });
 
     spriteAdder.addClickableSprite(panel, "assets/pets/actions/sleep.png", 140, 550, 96, 88, () -> {
       pet.sleep();
+      musicPlayer.playEffectSound("assets/app/audio/effects/actionbtn.wav");
     });
 
     spriteAdder.addClickableSprite(panel, "assets/pets/actions/play.png", 140, 650, 96, 88, () -> {
       pet.play();
+      musicPlayer.playEffectSound("assets/app/audio/effects/actionbtn.wav");
     });
+  }
+
+  private void deadScene(JPanel panel, Pet pet, String petName){
+    musicPlayer.stop();
+    screenManager.clearScreen();
   }
 
   private void petStatsOnScreen(JPanel panel, Pet pet){
@@ -111,10 +121,26 @@ public class Game{
     bar.renderBar(panel, "fun", fun, 30, 145);
     bar.renderBar(panel, "cleanliness", cleanliness, 30, 175);
 
+    // ISSUES BANNERS CONTAINER
+    // spriteAdder.addSprite(panel, );
+
     // ISSUES BANNERS
-    if (hunger <= 5){
+    if (hunger <= 3){
       spriteAdder.addDescartableGif(panel, "needfood", "assets/app/needfood.gif", 0, 250, 200, 64, 4000);
     }
+
+    if (sleep <= 3){
+      spriteAdder.addDescartableGif(panel, "needsleep", "assets/app/needsleep.gif", 320, 580, 50,50, 1000);
+    }
+
+    if (fun <= 3){
+      spriteAdder.addDescartableGif(panel, "needfun", "assets/app/needfun.gif", 285, 660, 50,50, 1000);
+    }
+
+    if (cleanliness <= 3){
+      spriteAdder.addDescartableGif(panel, "needcleanliness", "assets/app/needcleanliness.gif", 365, 660, 50,50, 1000);
+    } 
+
   }
 
   private void startGame(JPanel panel, String petName, String status) {
@@ -132,16 +158,21 @@ public class Game{
       screenManager.clearScreen();
       spriteAdder.addGif(panel, "assets/app/bg.gif", -10, 60, 480, 660);
       spriteAdder.addGif(panel, petMainAnimation, 125, 300, 200, 200);
+      spriteAdder.addSprite(panel, "issuesList", "assets/app/petissues.png", 270, 540, 156, 200);
 
       musicPlayer.playLoop("assets/app/audio/Game.wav");
 
       if (status == "new") {
         Pet pet = new Pet(petName);
 
-        Timer autoSaveTimer = new Timer(2000, e -> {
+        autoSaveTimer = new Timer(2000, e -> {
           petStatsOnScreen(panel, pet);
           pet.degradeStats();
           petUtils.savePetToFile(pet, FileToSave);
+          petUtils.verifyPetConditions(pet, panel, () -> {
+            autoSaveTimer.stop();
+            deadScene(panel, pet, pet.getName());
+          });
         });
 
         // ACTIONS BUTTONS
@@ -153,10 +184,14 @@ public class Game{
 
         Pet pet = petUtils.loadPetFromFile(FileToSave);
 
-        Timer autoSaveTimer = new Timer(2000, e -> {
+        autoSaveTimer = new Timer(2000, e -> {
           petStatsOnScreen(panel, pet);
           pet.degradeStats();
           petUtils.savePetToFile(pet, FileToSave);
+          petUtils.verifyPetConditions(pet, panel, () -> {
+            autoSaveTimer.stop();
+            deadScene(panel, pet, pet.getName());
+          });
         });
 
         // ACTIONS BUTTONS

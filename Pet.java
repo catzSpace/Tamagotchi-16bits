@@ -6,6 +6,7 @@ public class Pet implements Serializable {
     private final String name;
 
     private double health = 8;
+    private int level = 1;
 
     private double hunger = 10;
     private double sleep = 10;
@@ -19,6 +20,7 @@ public class Pet implements Serializable {
     // Getters
     public String getName() { return name; }
 
+    public double getLevel() { return level; }
     public double getHealth() { return health; }
     public double getHunger() { return hunger; }
     public double getSleep() { return sleep; }
@@ -32,39 +34,35 @@ public class Pet implements Serializable {
 
     public void degradeStats() {
       //health = Math.max(0, round1Decimal(health - 0.2));
-      hunger = Math.max(0, round1Decimal(hunger - 2));
-      sleep = Math.max(0, round1Decimal(sleep - 1));
-      fun = Math.max(0, round1Decimal(fun - 1));
-      cleanliness = Math.max(0, round1Decimal(cleanliness - 1));
+      hunger = Math.max(0, round1Decimal(hunger - 1));
+      sleep = Math.max(0, round1Decimal(sleep - 0.5));
+      fun = Math.max(0, round1Decimal(fun - 0.5));
+      cleanliness = Math.max(0, round1Decimal(cleanliness - 0.5));
     }
 
     // Actions
     public void eat() {
         hunger = Math.min(10, hunger + 1);
-        cleanliness = Math.max(0, cleanliness - 0.2);
+        cleanliness = Math.max(0, cleanliness - 0.5);
     }
 
     public void sleep() {
-        this.sleep = Math.min(10, this.sleep + 1);
-        fun = Math.max(0, fun - 0.2);
-        hunger = Math.max(0, hunger - 0.2);
+        sleep = Math.min(10, sleep + 1);
+        hunger = Math.max(0, hunger - 0.5);
     }
 
     public void play() {
         fun = Math.min(10, fun + 1);
-        sleep = Math.max(0, sleep - 0.2);
-        hunger = Math.max(0, hunger - 0.2);
+        sleep = Math.max(0, sleep - 0.5);
     }
 
     public void bathe() {
         cleanliness = Math.min(10, cleanliness + 1);
-        fun = Math.max(0, fun - 0.2);
+        fun = Math.max(0, fun - 0.5);
     }
 
-    public void heal() {
-        health = Math.min(10, health + 1);
-        sleep = Math.max(0, sleep - 0.2);
-        fun = Math.max(0, fun - 0.2);
+    public void levelUp(){
+      level++;
     }
 
     @Override
